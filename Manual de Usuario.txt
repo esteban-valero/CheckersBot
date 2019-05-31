@@ -1,0 +1,9 @@
+											Manual de Usuario
+Uso del Script SuperBotOk.py:
+Este es el archivo que se desarrollo para competir con los demas, para usarlo se debe ejecutar como:
+python2 chekers.py SuperBotOk.py "ArchivoRival"
+
+Uso del Script Wally:
+Este Script se desarrollo para poder jugar manualmente y hacer pruebas de forma manual 
+Para hacer uso del script Wally.py, se muestra en pantalla los posibles movimientos, con la cooedenada de origen y la de destino listadas del 0 a n.
+Se selecciona el numero correspondiente a la jugada para mover la ficha de la posicion inicial a la final designada.

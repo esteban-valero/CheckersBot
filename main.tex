@@ -1,0 +1,464 @@
+\documentclass[12pt]{article}
+ 
+ 
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithm,algpseudocode}
+\usepackage{amsfonts}
+
+
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[spanish]{babel} %Castellanización
+\usepackage[T1]{fontenc} %escribe lo del teclado
+\usepackage[utf8]{inputenc} %Reconoce algunos símbolos
+\usepackage{lmodern} %optimiza algunas fuentes
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{hyperref} % Uso de links
+\usepackage{algorithm,algpseudocode}
+
+ 
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{problem}[2][Problem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{question}[2][Question]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+\begin{document}
+\begin{titlepage}
+	\centering
+
+	{\scshape\Large Pontificia Universidad Javeriana \par}
+	\vspace{1cm}
+	{\huge\bfseries Entrega final\par}
+	\vspace{1.2cm}
+		{\Large\textbf{Asignatura}\par}
+	\vspace{0.3cm}
+	{\large Analisis de Algoritmos \par}
+	\vspace{0.6cm}
+	{\Large\textbf{Profesor}\par}
+	\vspace{0.3cm}
+	{\large Leonardo Florez Valencia \par}
+	\vspace{0.6cm}
+	\vspace{0.6cm}
+	{\Large\textbf{Integrantes}\par}
+	\vspace{0.3cm}
+	{\large Andrés David Mariño Sánchez\par}
+	{\large Daniel Esteban Valero Galeano\par}
+	{\large Diego Alejandro Mateus Cruz\par}
+	{\large Jonathan Esteban Molina Castañeda\par}
+	\vspace{0.3cm}
+	\begin{figure}[!ht] 
+  \centering
+    \includegraphics[width=0.3\textwidth]{logo.png}
+  \label{fig:logoGrupo}
+\end{figure}
+\vspace{0.6cm}
+% Bottom of the page
+	{\large \today\par}
+
+\end{titlepage}
+
+\section{Introducción}
+
+    Damas es un juego de mesa para dos contrincantes, en el cual cada jugador posee 12 fichas. El objetivo del juego consiste en derrotar al adversario dejándolo sin piezas o no permitir que haga una jugada.
+    
+\section{Elementos del juego}
+
+    El tablero del juego está representado por una matriz de tipo char con dimensiones 8x8, contiene dos tipos de espacios, donde puede estar una ficha y donde no, en los espacios que existe la posibilidad de que se encuentre una ficha tiene opción para que se encuentren 4 diferentes fichas, están son:
+    
+    \begin{itemize}
+        \item\textbf{Fichas blancas normales:}
+            Representan las fichas del primer jugador y solo se pueden mover un espacio en diagonal hacia la parte contraria del tablero de donde empezó a jugar, puede mover más espacios si come (se describe más adelante) y se representan por el carácter 'x'.
+            
+        \item\textbf{Fichas negras normales:}
+            Representan las fichas del segundo jugador y solo se pueden mover un espacio en diagonal hacia la parte contraria del tablero de donde empezó a jugar, puede mover más espacios si come (se describe más adelante) y se representa por el carácter 'o'.
+            
+        \item\textbf{Fichas blancas coronadas:}
+            Representan las fichas del primer jugador que han llegado al extremo contrario del tablero (el extremo del contrario) por lo cual tienen la posibilidad de mover de forma vertical ya sea hacia arriba o abajo, igualmente pueden comer y son representadas por el carácter 'X'.
+            
+        \item\textbf{Fichas negras coronadas:}
+            Representan las fichas del segundo jugador que han llegado al extremo contrario del tablero (el extremo del contrario) por lo cual tienen la posibilidad de mover de forma vertical ya sea hacia arriba o abajo, igualmente pueden comer y son representadas por el carácter 'O'.
+            
+    \end{itemize}
+    
+    En aquellos espacios que no se pueda encontrar una ficha estarán representados por el carácter '-'.
+    
+\section{Jugadas}
+
+    Las jugadas identificadas que pueden realizar las fichas, independientemente del tipo que sean, y las cuales se van a implementar son las siguientes:
+
+    \begin{itemize}
+        \item\textbf{Comer :}
+            Una ficha puede moverse en una diagonal de dos casillas, si la casilla final a la que se mueve esta libre y si en la casilla intermedia se encuentra una ficha del oponente. Si esto ocurre la ficha del oponente se retira del juego. Si existe la posibilidad de realizar esta jugada, deberá ser obligatoria.
+        
+        \item\textbf{Asegurar ficha en peligro:} 
+            Si en el siguiente turno del oponente se ve la posibilidad de que puedan comer una ficha propia, esta se asegurara con otra ficha, poniéndola en la diagonal en la cual va a terminar la ficha oponente, así evitando que en el siguiente turno del oponente este coma una ficha.
+        
+        \item\textbf{Coronar:}
+            Si exite la posibilidad de que una ficha llegue al extremo del contrario, este movimiento se hara para tener una ficha reina.
+        
+        \item\textbf{Mover reina sin riesgo:}
+            Dado que la reina se puede mover verticalmente en cualquier sentido es una ficha muy valiosa, por lo cual se pretende moverla la mayor cantidad posible sin que esté en riesgo.
+    \end{itemize}
+    
+\section{Estados del juego}
+    El juego puede tener distintos estados, los cuales son:
+    \begin{itemize}
+        \item\textbf{Jugador oponente sin fichas:}
+            Si a medida que se juegue se comen todas las fichas del jugador oponente, pasara al estado del juego en que el oponente se quedó sin fichas, por lo cual se nos dará la victoria.
+            
+        \item\textbf{Jugador sin fichas:}
+            Si el oponente se come todas las fichas del jugador, pasara al estado del juego en que el jugador se quedó sin fichas, por lo cual se dirá que el jugador oponente gano la partida.
+        
+        \item\textbf{Oponente sin movimientos posibles:}
+            Dado que el jugador acorrale al jugador oponente dejándolo sin poder realizar movimientos posibles, se dirá que el jugador oponente quedo sin movimientos posibles, dándole la victoria al jugador. 
+        
+        \item\textbf{Jugador sin movimientos posibles:}
+            Dado que el jugador oponente acorrale al jugador dejándolo sin poder realizar movimientos posibles, se dirá que el jugador quedo sin movimientos posibles, dándole la victoria al jugador oponente.
+            
+        
+        \item\textbf{Bucle de 5 jugadas:}
+            Si se repite un mismo ciclo de jugadas más de 5 veces gana el jugador que tenga más fichas. Si ambos jugadores tienen la misma cantidad de fichas, se considerará empate.
+        
+        \item\textbf{Posibilidad de jugar:}
+            Dado que no se cumpla ninguna condición anteriormente mencionadas se podrá jugar con normalidad.
+
+        
+    \end{itemize}
+    
+\section{Formalizacion}
+
+    \subsection{Análisis del problema}
+        Se busca crear un "bot" que pueda jugar el juego Damas Chinas (también conocido como Checkers) para que pueda jugar contra otro "bot" mediante la comunicación en pipes que provee un árbitro ya implementado.
+        
+        
+    \subsection{Entradas:}
+        La entrada es una matriz de tablero E que contiene las fichas propias y del oponente. Este tablero va cambiando según el transcurso de juego. A su vez se recibe la ficha del jugador que esta se represnte con J.
+                
+    \subsection{Salidas:}
+        Se retornará un arreglo de coordenadas, la primera posición del arreglo será las coordenadas de la ficha que se desea mover, y las siguientes coordenadas serán las posiciones en que se desplazó dicha ficha.
+                
+    \subsection{Tipo de problema:}
+        Al tener que escoger que ficha se tiene que mover y a qué lugar se tiene que mover la misma, se define como un problema de \textbf{desicion}.
+            
+    \subsection{Clase de problema:}
+        Dado que el problema es de decisión, el cual se puede comprobar polinomialmente comprobando si la jugada es válida y al ser super-polinomial. Se declara que es un problema \textbf{NP-Completo}
+
+\section{Heurística}
+
+    La heurística que se va a usar pretende dejar al jugador oponente sin movimientos, comiendo cada vez que sea obligatorio, por eso se validaran las siguientes jugadas que están ordenadas de una manera de prioridad mayor a menor, por lo cual, si evalúa que se puede ejecutar una lo hará, este orden es:
+    
+    \begin{itemize}
+        \item\textbf{Comer :} 
+            Dada que esta jugada es obligatoria será la primera en validar, pero dado el caso que más de una ficha pueda realizar dicho movimiento, se procederá a realizar aquella que al comer no se la coman después, el siguiente criterio será aquella que más coma, y por ultimo aquella que este más a la izquierda.
+        
+        \item\textbf{Asegurar ficha próxima a que se la coman:}
+            Se verificará todas nuestras fichas posibles próximas a que se las coman y se intentará salvar las reinas o la que más arriba este y a la izquierda. Primero se intentará salvar poniendo una ficha en sus diagonales, dependiendo de donde se la vayan a comer, y si esto no es posible se evaluará si ella se puede mover para que no se la coman.
+            
+        \item\textbf{Coronar:}
+            Si existe una ficha próxima a coronar se hará este movimiento, si existen más de dos fichas próximas coronar, se escogerá la que este más a la izquierda.
+        
+        \item\textbf{Mover reina sin riesgo:}
+            Se procederá a mover la reina más cercana a donde se encuentre la mayor concentración de fichas enemigas, se decidirá donde hay más fichas enemigas dividiendo el tablero en 4 partes iguales y dicha reina se moverá a dicha zona, si la reina ya está en esa zona se moverá otra reina, solo se moverá si no se pone en riesgo.
+        
+        \item\textbf{Mover la de más arriba:}
+            Se procederá a mover la ficha que esté más cerca al borde del enemigo de forma segura, si hay más de una ficha que tenga esta opción se procederá a mover la que este más a la izquierda.
+        
+    \end{itemize}
+    
+\section{Pseudocodigo}
+
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Procedure{coronar}{E,M,J}
+    \State $cont = 1$
+    \For{$i \gets 0$ in range $|M|$}
+        \If{$J$ in $J1['Pieces']$}
+            \If{$M[i][-1][0]==J1['crown']$}
+                \State return $M[i]$
+                \EndIf
+                \EndIf
+        \If{$J$ in $J2['Pieces']$}
+            \If{$M[i][-1][0]==J2['crown']$}
+                \State return $M[i]$
+            \EndIf
+            \EndIf
+        \EndFor
+    \EndProcedure
+    \end{algorithmic}
+  \caption{Coronar}
+\end{algorithm}
+
+
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Procedure{MovUp}{E,M,J}
+    
+    \For{$i$ in range $|M|$}
+       \If{$E$ $[M[i][0][0]]$ $[M[i][0][1]]$ in $J2[$'pieces'$][0]$}
+        \If{$M[i][0][1]$ $>$ $M[i][1][1]$}
+            \If{$(E[(M[i][1][0])+1][(M[i][1][1]+1)]$ not in $ J2['adversary'])$ and $E[(M[i][1][0])+1][(M[i][1][1])-1] == BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])+1] == BLANCO$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])+1]$ not in $J2['adversary']$ and $(E[(M[i][1][0])+1][(M[i][1][1]-1)] != BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])+1] != BLANCO)$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])+1]$ not in $J2['adversary']$ and $(E[(M[i][1][0])+1][(M[i][1][1]-1)]$ not in $J2['adversary'])$ and $E[(M[i][1][0])-1][(M[i][1][1])+1] == BLANCO$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])+1]$ not in $J2['adversary']$ and $E[(M[i][1][0])+1][(M[i][1][1]-1)] != BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])+1]$ in $J2['adversary'][1]$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])+1]$ not in $J2['adversary']$ and $E[(M[i][1][0])+1][(M[i][1][1]-1)] == BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])+1]$ not in $J2['adversary'][1]$}
+                \State Return $M[i]$
+            \EndIf
+            \Else :
+                \State Return $M[i]$
+        \EndIf
+         \EndIf
+        
+        \EndFor
+        \EndProcedure
+          \end{algorithmic}
+          \caption{Mover Seguro}
+         \end{algorithm}
+        \begin{algorithm}[H]
+        \begin{algorithmic}[1]
+        \If{$M[i][0][1]$ $>$ $M[i][1][1]$}
+            \If{$(E[(M[i][1][0])+1][(M[i][1][1]-1)]$ not in $ J2['adversary'])$ and $E[(M[i][1][0])+1][(M[i][1][1])+1] == BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])-1] == BLANCO$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])-1]$ not in $J2['adversary']$ and $(E[(M[i][1][0])+1][(M[i][1][1]+1)] != BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])-1] != BLANCO)$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])-1]$ not in $J2['adversary']$ and $(E[(M[i][1][0])+1][(M[i][1][1]+1)]$ not in $J2['adversary'])$ and $E[(M[i][1][0])-1][(M[i][1][1])-1] == BLANCO$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])-1]$ not in $J2['adversary']$ and $E[(M[i][1][0])+1][(M[i][1][1]+1)] != BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])-1]$ in $J2['adversary'][1]$}
+                \State Return $M[i]$
+            \ElsIf{$E[(M[i][1][0])+1][(M[i][1][1])-1]$ not in $J2['adversary']$ and $E[(M[i][1][0])+1][(M[i][1][1]+1)] == BLANCO$ and $E[(M[i][1][0])-1][(M[i][1][1])-1]$ not in $J2['adversary'][1]$}
+                \State Return $M[i]$
+           
+  
+       \Else :
+                \State Return $M[i]$
+        \EndIf
+        \EndIf
+
+         \State Return $rand.Choice(M)$
+
+
+          \end{algorithmic}
+          \caption{Mover Seguro}
+       \end{algorithm}
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Procedure{asegurar}{E,M,J}
+    \State $s = []$
+    \If{$J$ in $J2['pieces']$ }
+        \State $s=estaEnPeligro(E,M,J)$
+        \If{$s!=None$}
+        \For{$k$ in range ($len(M)$)}
+        \If{$M[k][1][0]==s[0]$ and $M[k][1][1]== s[1]$}
+        \State Return $M[k]$
+        \EndIf
+        \EndFor
+        \EndIf
+        \EndIf
+    \State Return coronar($E,M,J$)
+    \EndProcedure         
+    \end{algorithmic}
+     \caption{Asegurar una ficha}
+      \end{algorithm}    
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Procedure{estaEnPeligro}{E,M,J}
+    \For{$i$ in range (8)}
+    \For{$j$ in range (8)}
+    \If{$j+1<8$ and $i+1<8$ and $E[i][j]$ in $J2['pieces']$ and $E[i-1][j-1]$ in $J2['adversary']$}
+    \If{$E[i+1][j+1]== BLANCO$}
+    \State Return $i+1,j+1$
+    \EndIf
+    \ElsIf{$j+1<8$ and $i+1<8$ and $E[i][j]$ in $J2['pieces']$ and $E[i+1][j-1]== BLANCO$}
+    \If{$E[i-1][j+1]$ in $J2['adversary']$}
+    \State Return $i+1,j-1$
+    \EndIf
+    \ElsIf{$j+1<8$ and $i+1<8$ and $E[i][j]$ in $J2['pieces']$ and $E[i+1][j-1]$ in $J2['adversary'][1]$}
+    \If{$E[i-1][j+1] == BLANCO$}
+    \State Return $i-1,j+1$
+    \EndIf
+    \ElsIf{$j+1<8$ and $i+1<8$ and $E[i][j]$ in $J2['pieces']$ and $E[i-1][j-1] == BLANCO$ }
+    \If{$E[i+1][j+1]$ in $J2['adversary'][1]$}
+    \State Return $i-1,j-1$
+    \EndIf
+    \EndIf
+    \EndFor
+    \EndFor
+    \State Return None
+    
+    \EndProcedure         
+    \end{algorithmic}
+     \caption{Ficha en peligro}
+      \end{algorithm}       
+    
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+    \Procedure{Posibles}{M,a,b}
+        \State $aux = 0$
+        \State $mAUX$
+        \State ma[]
+        
+        \If{ $a - 1 <> 0 $ }
+            \State $mAUX = M$
+            \State $aux = M[a-1][b]$
+            \State $mAUX[a-1][b] = 9$
+            \State $mAUX[a][b] = aux$
+            \State $ma.add(mAUX)$
+            
+        \EndIf
+        
+        \If{ $b - 1 <> 0 $ }
+            \State $mAUX = M$
+            \State $aux = M[a][b-1]$
+            \State $mAUX[a][b-1] = 9$
+            \State $mAUX[a][b] = aux$
+            \State $ma.add(mAUX)$
+        \EndIf
+        
+        \If{ $a + 1 <> 4 $ }
+            \State $mAUX = M$
+            \State $aux = M[a+1][b]$
+            \State $mAUX[a+1][b] = 9$
+            \State $mAUX[a][b] = aux$
+            \State $ma.add(mAUX)$
+        \EndIf
+        
+        \If{ $b + 1 <> 4 $ }
+            \State $mAUX = M$
+            \State $aux = M[a][b+1]$
+            \State $mAUX[a][b+1] = 9$
+            \State $mAUX[a][b] = aux$
+            \State $ma.add(mAUX)$
+        \EndIf
+    \State Return $ma$
+    
+    \EndProcedure
+    \end{algorithmic}
+  \caption{Realizar posibles movimientos}
+\end{algorithm}
+
+\section{Invariante}
+
+    Se recibe el estado actual del tablero y se retorna un movimiento de parte del aplicativo, dicho movimiento tiene que ser valido acorde a las reglas establecidas previamente.
+
+
+\section{Complejidad}
+
+    El funcionamiento del programa se basa en la utilizacion de una función moves(), la cual utiliza 3 ciclos anidados para sacar las posibles jugadas, debido a esto la complejidad general del algoritmo es 
+    \State  
+    \begin{center}
+
+$O(n^3)$ 
+
+\end{center} 
+ 
+ 
+
+    Para nuestra heurística utilizamos diferentes niveles de verificacion (if, elseif) y solo se utilizo 2 ciclos anidados en la función estaEnPeligro()
+     \begin{center}
+    
+    \State $O(n^2)$
+    
+\end{center} 
+
+\section{Pruebas}
+
+    Para probar el funcinamiento del aplicativo se realizaron pruebas con otro aplicativo que hace movimientos aleatorios, contra distintos humanos y contra si mismo, dicho esto, se miro la cantidad de victorias de 10 partidas por cada contrincante, y se midio el tiempo que tardo nuestro aplicativo y el total de turnos para que se acabara la partida. Los resultados fueron los siguientes: 
+
+    \begin{itemize}
+        \item\textbf{Aplicativo contra aleatorio:}
+        
+                 \begin{table}[H]
+                \centering
+                \begin{tabular}{|c|c|c|}\hline
+                \textbf{Victoria} & \textbf{Turnos} & \textbf{Tiempo (s)}\\\hline
+                    si & 18 & 0.001578 \\ \hline
+                    si & 27 & 0.002036 \\ \hline                 
+                    si & 18 & 0.001473 \\ \hline
+                    si & 26 & 0.001121 \\ \hline               
+                    si & 39 & 0.002287 \\ \hline
+                    si & 33 & 0.001678 \\ \hline
+                    si & 28 & 0.007149\\ \hline
+                    si & 103 & 0.005250 \\ \hline
+                    si & 27 & 0.010259 \\ \hline
+                    si & 28 & 0.002926 \\ \hline
+                \end{tabular}
+                \caption{Aplicativo vs aleatorio}
+                \label{tab3}
+            \end{table}
+            
+            El aplicativo gano el 100 porciento de las veces contra un aplicativo que solo realizaba movimientos aleatorios, por lo que se supuso que es mas efectiva nuestra heuristica.
+        
+        
+        \item\textbf{Aplicativo contra humanos}
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|c|c|c|}\hline
+                \textbf{Victoria} & \textbf{Turnos} & \textbf{Tiempo (s)}\\\hline
+                    si & 28 & 0.01415 \\ \hline
+                    si & 22 & 0.02686 \\ \hline                 
+                    si & 24 & 0.01285 \\ \hline
+                    si & 41 & 0.02124 \\ \hline               
+                    no & 32 & 0.01450 \\ \hline
+                    si & 22 & 0.04943 \\ \hline
+                    si & 28 & 0.03185 \\ \hline
+                    si & 23 & 0.00774 \\ \hline
+                    si & 27 & 0.00616 \\ \hline
+                    no & 26 & 0.00487 \\ \hline
+                    
+                \end{tabular}
+                \caption{Aplicativo vs humanos}
+                \label{tab3}
+            \end{table}
+        
+        
+        \item\textbf{Aplicativo contra si mismo}
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|c|c|}\hline
+                \textbf{Turnos} & \textbf{Tiempo (s)}\\\hline
+                    71 & 0.02279 \\ \hline
+                    49 & 0.01555 \\ \hline                 
+                    62 & 0.01735 \\ \hline
+                    54 & 0.01998 \\ \hline               
+                    94 & 0.02435 \\ \hline
+                    167 & 0.03798 \\ \hline
+                    73 & 0.023555 \\ \hline
+                    72 & 0.023871 \\ \hline
+                    117 & 0.031154 \\ \hline
+                \end{tabular}
+                \caption{Aplicativo vs Aplicativo}
+                \label{tab3}
+            \end{table}
+            
+        Cuando el aplicativo jugaba contra si mismo, se pudo observar que se demoraba mas turnos en acabar la partida con respecto a sus demas contrincantes.
+    \end{itemize}
+
+
+
+
+
+\end{document}
